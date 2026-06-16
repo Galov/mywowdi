@@ -2,7 +2,6 @@ import Image from 'next/image'
 
 import { contentLocales, defaultLocale, type ContentLocale } from '@/i18n/config'
 import { LogoIcon } from '@/components/icons/logo'
-import wowdiCollection from '../../../docs/source-materials/93992E30-1A22-4758-8D6D-2A8452A2ED2A.png'
 
 const content: Record<
   ContentLocale,
@@ -67,9 +66,8 @@ export const ComingSoon = ({ locale: rawLocale }: { locale?: string }) => {
         alt="Preview of the MYWOWDI collection"
         className="object-cover object-center"
         fill
-        placeholder="blur"
         priority
-        src={wowdiCollection}
+        src="/coming-soon/hero-background.png"
       />
 
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(28,19,13,0.74)_0%,rgba(28,19,13,0.58)_34%,rgba(28,19,13,0.18)_68%,rgba(28,19,13,0.08)_100%)]" />
