@@ -1,0 +1,68 @@
+'use client'
+import type { ContentLocale } from '@/i18n/config'
+import { Product, Variant } from '@/payload-types'
+import { useSearchParams } from 'next/navigation'
+import { useMemo } from 'react'
+
+type Props = {
+  locale?: ContentLocale
+  product: Product
+}
+
+const stockCopy = {
+  bg: {
+    available: 'Създаден изцяло в Европа само с европейски материали и местни партньори',
+    outOfStock: 'Изчерпан',
+    ready: 'Доставка в цяла Европа',
+  },
+  default: {
+    available: 'Designed in Europe with European materials and partners',
+    outOfStock: 'Out of stock',
+    ready: 'Delivery across Europe',
+  },
+}
+
+export const StockIndicator: React.FC<Props> = ({ locale, product }) => {
+  const searchParams = useSearchParams()
+  const copy = locale === 'bg' ? stockCopy.bg : stockCopy.default
+
+  const variants = product.variants?.docs || []
+
+  const selectedVariant = useMemo<Variant | undefined>(() => {
+    if (product.enableVariants && variants.length) {
+      const variantId = searchParams.get('variant')
+      const validVariant = variants.find((variant) => {
+        if (typeof variant === 'object') {
+          return String(variant.id) === variantId
+        }
+        return String(variant) === variantId
+      })
+
+      if (validVariant && typeof validVariant === 'object') {
+        return validVariant
+      }
+    }
+
+    return undefined
+  }, [product.enableVariants, searchParams, variants])
+
+  const stockQuantity = useMemo(() => {
+    if (product.enableVariants) {
+      if (selectedVariant) {
+        return selectedVariant.inventory || 0
+      }
+    }
+    return product.inventory || 0
+  }, [product.enableVariants, selectedVariant, product.inventory])
+
+  if (product.enableVariants && !selectedVariant) {
+    return null
+  }
+
+  return (
+    <div className="text-sm tracking-[0.02em] text-primary/70">
+      {stockQuantity > 0 && <p>{copy.available}</p>}
+      {(stockQuantity === 0 || !stockQuantity) && <p>{copy.outOfStock}</p>}
+    </div>
+  )
+}
