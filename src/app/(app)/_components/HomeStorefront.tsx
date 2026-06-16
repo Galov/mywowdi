@@ -45,10 +45,10 @@ const storefrontCopy = {
     eyebrow: 'Натурална антистрес играчка',
     heroTitle: 'Тих обект за ръката. Повече спокойствие, по-малко шум.',
     heroBody:
-      'WOWDY съчетава естествена кожа, дърво и плътен тактилен отговор в малък предмет, който стои спокойно и красиво до теб.',
+      'MYWOWDI съчетава естествена кожа, дърво и плътен тактилен отговор в малък предмет, който стои спокойно и красиво до теб.',
     heroPrimary: 'Избери вариант',
     heroSecondary: 'Виж детайлите',
-    buyEyebrow: 'Избери своя WOWDY',
+    buyEyebrow: 'Избери своя MYWOWDI',
     buyTitle: 'Един продукт. Няколко характера.',
     buyBody:
       'Изборът е прост - материал, тон и усещане. Всяка версия запазва една и съща тиха идея, но носи различно присъствие.',
@@ -71,17 +71,17 @@ const storefrontCopy = {
       'Пътят до покупката остава кратък и ясен.',
     ],
     finalEyebrow: 'Когато си готов',
-    finalTitle: 'Избери своя WOWDY и приключи с още едно шумно нещо на бюрото.',
+    finalTitle: 'Избери своя MYWOWDI и приключи с още едно шумно нещо на бюрото.',
   },
   default: {
     badge: 'Calm in your hand',
     eyebrow: 'Natural anti-stress object',
     heroTitle: 'A quiet object for your hand. More calm, less noise.',
     heroBody:
-      'WOWDY combines natural leather, wood and tactile resistance in a small object you genuinely want to keep close.',
+      'MYWOWDI combines natural leather, wood and tactile resistance in a small object you genuinely want to keep close.',
     heroPrimary: 'Choose your finish',
     heroSecondary: 'See the details',
-    buyEyebrow: 'Choose your WOWDY',
+    buyEyebrow: 'Choose your MYWOWDI',
     buyTitle: 'One product. Several characters.',
     buyBody:
       'The choice stays simple: material, tone and presence. Every version keeps the same calm idea while carrying a different mood.',
@@ -104,7 +104,7 @@ const storefrontCopy = {
       'The path to purchase remains short and deliberate.',
     ],
     finalEyebrow: 'Ready when you are',
-    finalTitle: 'Choose your WOWDY and replace one more noisy desk object with something quieter.',
+    finalTitle: 'Choose your MYWOWDI and replace one more noisy desk object with something quieter.',
   },
 } as const
 
@@ -136,7 +136,7 @@ export async function HomeStorefront({
   if (!product) {
     return (
       <section className="container py-10 md:py-16">
-        <Message warning="Все още няма публикуван продукт. Добави първия WOWDY продукт в админ панела, за да се появи storefront секцията тук." />
+        <Message warning="Все още няма публикуван продукт. Добави първия MYWOWDI продукт в админ панела, за да се появи storefront секцията тук." />
       </section>
     )
   }

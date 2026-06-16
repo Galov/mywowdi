@@ -16,6 +16,14 @@ import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { isAdmin } from '@/access/isAdmin'
 import { isDocumentOwner } from '@/access/isDocumentOwner'
 
+const stripeKeys = {
+  publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  secretKey: process.env.STRIPE_SECRET_KEY,
+  webhookSecret: process.env.STRIPE_WEBHOOKS_SIGNING_SECRET,
+}
+
+const stripeEnabled = Object.values(stripeKeys).every((value) => value)
+
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Ecommerce Template` : 'Payload Ecommerce Template'
 }
@@ -120,13 +128,15 @@ export const plugins: Plugin[] = [
       }),
     },
     payments: {
-      paymentMethods: [
-        stripeAdapter({
-          secretKey: process.env.STRIPE_SECRET_KEY!,
-          publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-          webhookSecret: process.env.STRIPE_WEBHOOKS_SIGNING_SECRET!,
-        }),
-      ],
+      paymentMethods: stripeEnabled
+        ? [
+            stripeAdapter({
+              publishableKey: stripeKeys.publishableKey!,
+              secretKey: stripeKeys.secretKey!,
+              webhookSecret: stripeKeys.webhookSecret!,
+            }),
+          ]
+        : [],
     },
     products: {
       productsCollectionOverride: ProductsCollection,

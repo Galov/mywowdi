@@ -22,6 +22,7 @@ import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
+import { SiteSettings } from '@/globals/SiteSettings'
 import { adminLocale, contentLocales, defaultLocale } from '@/i18n/config'
 import { plugins } from './plugins'
 
@@ -83,7 +84,7 @@ export default buildConfig({
   }),
   //email: nodemailerAdapter(),
   endpoints: [],
-  globals: [Header, Footer],
+  globals: [Header, Footer, SiteSettings],
   i18n: {
     fallbackLanguage: adminLocale,
     supportedLanguages: {

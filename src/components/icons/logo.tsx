@@ -8,7 +8,7 @@ type Props = {
   priority?: boolean
 }
 
-export function LogoIcon({ alt = 'WOWDY logo', className, priority = false }: Props) {
+export function LogoIcon({ alt = 'MYWOWDI logo', className, priority = false }: Props) {
   return (
     <Image
       alt={alt}
@@ -16,7 +16,7 @@ export function LogoIcon({ alt = 'WOWDY logo', className, priority = false }: Pr
       className={clsx('h-auto w-10 rounded-full object-cover', className)}
       height={1024}
       priority={priority}
-      src="/brand/wowdy-logo.jpg"
+      src="/brand/wowdi-logo.jpg"
       width={1024}
     />
   )
