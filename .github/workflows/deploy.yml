@@ -38,6 +38,13 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          build-args: |
+            NEXT_PUBLIC_SERVER_URL=https://mywowdi.com
+            PAYLOAD_PUBLIC_SERVER_URL=https://mywowdi.com
+          secrets: |
+            payload_secret=${{ secrets.PAYLOAD_SECRET }}
+            database_url=${{ secrets.DATABASE_URL }}
+            preview_secret=${{ secrets.PREVIEW_SECRET }}
           tags: |
             ${{ env.APP_IMAGE }}
             ghcr.io/galov/mywowdi:${{ github.sha }}

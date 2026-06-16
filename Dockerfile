@@ -19,10 +19,21 @@ FROM base AS builder
 
 WORKDIR /app
 
+ARG NEXT_PUBLIC_SERVER_URL
+ARG PAYLOAD_PUBLIC_SERVER_URL
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm build
+RUN --mount=type=secret,id=payload_secret \
+    --mount=type=secret,id=database_url \
+    --mount=type=secret,id=preview_secret \
+    export PAYLOAD_SECRET="$(cat /run/secrets/payload_secret)" && \
+    export DATABASE_URL="$(cat /run/secrets/database_url)" && \
+    export PREVIEW_SECRET="$(cat /run/secrets/preview_secret)" && \
+    export NEXT_PUBLIC_SERVER_URL="$NEXT_PUBLIC_SERVER_URL" && \
+    export PAYLOAD_PUBLIC_SERVER_URL="$PAYLOAD_PUBLIC_SERVER_URL" && \
+    pnpm build
 
 FROM node:24-bookworm-slim AS runner
 
