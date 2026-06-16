@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
+import type { Metadata } from 'next'
 
 import { AdminBar } from '@/components/AdminBar'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { ensureStartsWith } from '@/utilities/ensureStartsWith'
 import { Providers } from '@/providers'
 import { GeistMono } from 'geist/font/mono'
 import { Manrope, Prata } from 'next/font/google'
@@ -22,32 +22,42 @@ const prata = Prata({
   weight: '400',
 })
 
-/* const { SITE_NAME, TWITTER_CREATOR, TWITTER_SITE } = process.env
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-  : 'http://localhost:3000'
-const twitterCreator = TWITTER_CREATOR ? ensureStartsWith(TWITTER_CREATOR, '@') : undefined
-const twitterSite = TWITTER_SITE ? ensureStartsWith(TWITTER_SITE, 'https://') : undefined
- */
-/* export const metadata = {
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+const defaultTitle = 'MYWOWDI'
+const defaultDescription =
+  'Quiet tactile objects in natural materials, created in Europe for focus, rhythm, and calm everyday presence.'
+const defaultOgImage = '/coming-soon/hero-background.png'
+
+export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   robots: {
     follow: true,
     index: true,
   },
   title: {
-    default: SITE_NAME,
-    template: `%s | ${SITE_NAME}`,
+    default: defaultTitle,
+    template: `%s | ${defaultTitle}`,
   },
-  ...(twitterCreator &&
-    twitterSite && {
-      twitter: {
-        card: 'summary_large_image',
-        creator: twitterCreator,
-        site: twitterSite,
+  description: defaultDescription,
+  openGraph: {
+    description: defaultDescription,
+    images: [
+      {
+        url: defaultOgImage,
       },
-    }),
-} */
+    ],
+    siteName: defaultTitle,
+    title: defaultTitle,
+    type: 'website',
+    url: baseUrl,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    description: defaultDescription,
+    images: [defaultOgImage],
+    title: defaultTitle,
+  },
+}
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   return (

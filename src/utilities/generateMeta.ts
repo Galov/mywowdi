@@ -6,6 +6,10 @@ import { mergeOpenGraph } from './mergeOpenGraph'
 
 export const generateMeta = async (args: { doc: Page | Product }): Promise<Metadata> => {
   const { doc } = args || {}
+  const defaultTitle = 'MYWOWDI'
+  const fallbackTitle = doc?.title ? `${doc.title} | ${defaultTitle}` : defaultTitle
+  const fallbackDescription =
+    'Quiet tactile objects in natural materials, created in Europe for focus, rhythm, and calm everyday presence.'
 
   const ogImage =
     typeof doc?.meta?.image === 'object' &&
@@ -14,13 +18,9 @@ export const generateMeta = async (args: { doc: Page | Product }): Promise<Metad
     `${process.env.NEXT_PUBLIC_SERVER_URL}${doc.meta.image.url}`
 
   return {
-    description: doc?.meta?.description,
+    description: doc?.meta?.description || fallbackDescription,
     openGraph: mergeOpenGraph({
-      ...(doc?.meta?.description
-        ? {
-            description: doc?.meta?.description,
-          }
-        : {}),
+      description: doc?.meta?.description || fallbackDescription,
       images: ogImage
         ? [
             {
@@ -28,9 +28,15 @@ export const generateMeta = async (args: { doc: Page | Product }): Promise<Metad
             },
           ]
         : undefined,
-      title: doc?.meta?.title || doc?.title || 'Payload Ecommerce Template',
+      title: doc?.meta?.title || fallbackTitle,
       url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
     }),
-    title: doc?.meta?.title || doc?.title || 'Payload Ecommerce Template',
+    title: doc?.meta?.title || fallbackTitle,
+    twitter: {
+      card: 'summary_large_image',
+      description: doc?.meta?.description || fallbackDescription,
+      images: ogImage ? [ogImage] : undefined,
+      title: doc?.meta?.title || fallbackTitle,
+    },
   }
 }

@@ -25,7 +25,7 @@ const stripeKeys = {
 const stripeEnabled = Object.values(stripeKeys).every((value) => value)
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Ecommerce Template` : 'Payload Ecommerce Template'
+  return doc?.title ? `${doc.title} | MYWOWDI` : 'MYWOWDI'
 }
 
 const generateURL: GenerateURL<Product | Page> = ({ doc }) => {
