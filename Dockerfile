@@ -5,12 +5,13 @@ ENV PATH="$PNPM_HOME:$PATH"
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN corepack enable
+RUN corepack prepare pnpm@10.8.0 --activate
 
 FROM base AS deps
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 
 RUN pnpm install --frozen-lockfile
 

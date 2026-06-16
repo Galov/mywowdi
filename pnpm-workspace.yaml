@@ -1,0 +1,5 @@
+onlyBuiltDependencies:
+  - '@vercel/git-hooks'
+  - esbuild
+  - sharp
+  - unrs-resolver

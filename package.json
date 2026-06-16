@@ -4,6 +4,7 @@
   "description": "Ecommerce template for Payload",
   "license": "MIT",
   "type": "module",
+  "packageManager": "pnpm@10.8.0",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
@@ -90,10 +91,5 @@
   },
   "engines": {
     "node": "^18.20.2 || >=20.9.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "sharp"
-    ]
   }
 }
