@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { ContentLocale } from '@/i18n/config'
+import type { Media as MediaType } from '@/payload-types'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { HomeStorefront } from './HomeStorefront'
@@ -13,6 +14,21 @@ import { draftMode } from 'next/headers'
 import React from 'react'
 
 import { notFound } from 'next/navigation'
+
+type HomeHeroContent = {
+  badge?: string | null
+  body?: string | null
+  image?: MediaType
+  primaryCTA?: string | null
+  secondaryCTA?: string | null
+  title?: string | null
+}
+
+type HomeBuyContent = {
+  badge?: string | null
+  body?: string | null
+  title?: string | null
+}
 
 type Args = {
   params: Promise<{
@@ -64,11 +80,34 @@ export async function CMSPage({ params }: Args) {
   const hasHero = Boolean(hero && hero.type && hero.type !== 'none')
   const homeHeroImage =
     page?.homeHeroImage && typeof page.homeHeroImage === 'object' ? page.homeHeroImage : undefined
+  const homeHeroContent: HomeHeroContent | undefined = isHomePage
+    ? {
+        badge: page?.homeHeroBadge,
+        body: page?.homeHeroBody,
+        image: homeHeroImage,
+        primaryCTA: page?.homeHeroPrimaryCTA,
+        secondaryCTA: page?.homeHeroSecondaryCTA,
+        title: page?.homeHeroTitle,
+      }
+    : undefined
+  const homeBuyContent: HomeBuyContent | undefined = isHomePage
+    ? {
+        badge: page?.homeBuyBadge,
+        body: page?.homeBuyBody,
+        title: page?.homeBuyTitle,
+      }
+    : undefined
 
   return (
     <article className={hasHero || isHomePage ? 'pb-24' : 'pt-16 pb-24'}>
       {hero ? <RenderHero {...hero} locale={locale} /> : null}
-      {isHomePage ? <HomeStorefront heroImage={homeHeroImage} locale={locale} /> : null}
+      {isHomePage ? (
+        <HomeStorefront
+          buyContent={homeBuyContent}
+          heroContent={homeHeroContent}
+          locale={locale}
+        />
+      ) : null}
       {layout?.length ? <RenderBlocks blocks={layout} locale={locale} /> : null}
     </article>
   )

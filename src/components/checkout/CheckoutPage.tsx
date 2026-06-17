@@ -31,7 +31,7 @@ const apiKey = `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
 const stripe = loadStripe(apiKey)
 
 type GalleryItem = NonNullable<Product['gallery']>[number]
-type VariantSelection = Variant['options'][number]
+type VariantSelection = NonNullable<Variant['options']>[number]
 
 export const CheckoutPage: React.FC = () => {
   const locale = useCurrentLocale()

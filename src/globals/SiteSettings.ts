@@ -5,8 +5,11 @@ import { adminOnly } from '@/access/adminOnly'
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: {
-    plural: 'Site Settings',
-    singular: 'Site Settings',
+    plural: 'Настройки на сайта',
+    singular: 'Настройки на сайта',
+  },
+  admin: {
+    group: 'Съдържание',
   },
   access: {
     read: () => true,
@@ -17,7 +20,7 @@ export const SiteSettings: GlobalConfig = {
       name: 'comingSoonEnabled',
       type: 'checkbox',
       defaultValue: true,
-      label: 'Coming soon режим',
+      label: 'Режим „Скоро онлайн“',
     },
   ],
 }

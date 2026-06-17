@@ -1,7 +1,6 @@
 import type { Media as MediaType, Product } from '@/payload-types'
 import type { ContentLocale } from '@/i18n/config'
 
-import { Gallery } from '@/components/product/Gallery'
 import { Media } from '@/components/Media'
 import { Message } from '@/components/Message'
 import { ProductDescription } from '@/components/product/ProductDescription'
@@ -37,6 +36,21 @@ async function queryPrimaryProduct(locale: ContentLocale) {
   })
 
   return result.docs?.[0] || null
+}
+
+type HomeHeroContent = {
+  badge?: string | null
+  body?: string | null
+  image?: MediaType
+  primaryCTA?: string | null
+  secondaryCTA?: string | null
+  title?: string | null
+}
+
+type HomeBuyContent = {
+  badge?: string | null
+  body?: string | null
+  title?: string | null
 }
 
 const storefrontCopy = {
@@ -124,10 +138,12 @@ function FeatureList({ items }: { items: readonly string[] }) {
 }
 
 export async function HomeStorefront({
-  heroImage,
+  buyContent,
+  heroContent,
   locale,
 }: {
-  heroImage?: MediaType
+  buyContent?: HomeBuyContent
+  heroContent?: HomeHeroContent
   locale: ContentLocale
 }) {
   const product = await queryPrimaryProduct(locale)
@@ -161,7 +177,16 @@ export async function HomeStorefront({
           },
         ]
 
-  const heroVisual = heroImage || fallbackGallery[0]?.image
+  const heroVisual = heroContent?.image || fallbackGallery[0]?.image
+  const heroBadge = heroContent?.badge || copy.badge
+  const heroTitle = heroContent?.title || copy.heroTitle
+  const heroBody = heroContent?.body || copy.heroBody
+  const heroPrimaryCTA = heroContent?.primaryCTA || copy.heroPrimary
+  const heroSecondaryCTA = heroContent?.secondaryCTA || copy.heroSecondary
+  const buyBadge = buyContent?.badge || copy.buyEyebrow
+  const buyTitle = buyContent?.title || copy.buyTitle
+  const buyBody = buyContent?.body || copy.buyBody
+  const buyVisual = fallbackGallery[0]?.image || heroVisual
 
   return (
     <>
@@ -182,28 +207,27 @@ export async function HomeStorefront({
         <div className="relative min-h-[calc(100svh-5rem)]">
           <div className="container flex min-h-[calc(100svh-5rem)] items-center py-14 md:py-18">
             <div className="max-w-2xl">
-              <p className="mb-4 text-[0.72rem] uppercase tracking-[0.28em] text-white/72">
-                {copy.badge}
+              <p className="mb-6 text-[0.72rem] uppercase tracking-[0.28em] text-white/72 md:mb-8">
+                {heroBadge}
               </p>
-              <p className="mb-5 text-sm text-white/72 md:text-base">{copy.eyebrow}</p>
               <h1 className="font-display max-w-4xl text-5xl leading-[0.92] tracking-[-0.045em] text-white md:max-w-3xl md:text-[3.7rem] lg:text-[4.35rem]">
-                {copy.heroTitle}
+                {heroTitle}
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-7 text-white/78 md:text-[1.05rem]">
-                {copy.heroBody}
+              <p className="mt-8 max-w-xl text-base leading-7 text-white/78 md:mt-10 md:text-[1.05rem]">
+                {heroBody}
               </p>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-8 flex flex-col gap-3 md:mt-10 sm:flex-row">
                 <a
                   className="inline-flex h-12 items-center justify-center rounded-full bg-[#e8dcc5] px-6 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[#231c16] transition hover:bg-[#f0e5d0]"
                   href="#buy"
                 >
-                  {copy.heroPrimary}
+                  {heroPrimaryCTA}
                 </a>
                 <a
                   className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 px-6 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-white transition hover:border-white/60 hover:bg-white/8"
                   href="#details"
                 >
-                  {copy.heroSecondary}
+                  {heroSecondaryCTA}
                 </a>
               </div>
             </div>
@@ -211,34 +235,49 @@ export async function HomeStorefront({
         </div>
       </section>
 
-      <section className="container py-16 md:py-24" id="buy">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-start">
-          <div className="lg:sticky lg:top-28">
-            <div className="max-w-2xl">
-              <p className="mb-3 text-[0.72rem] uppercase tracking-[0.26em] text-primary/52">
-                {copy.buyEyebrow}
+      <section
+        className="bg-[radial-gradient(circle_at_top,rgba(74,49,35,0.38),transparent_42%),linear-gradient(180deg,#17100d_0%,#130d0b_100%)] py-12 md:py-18"
+        id="buy"
+      >
+        <div className="container">
+          <div className="grid items-start gap-10 lg:grid-cols-[minmax(17rem,0.72fr)_minmax(0,1.28fr)] lg:gap-12">
+            <div className="max-w-md lg:sticky lg:top-24">
+              <p className="mb-4 text-[0.72rem] uppercase tracking-[0.28em] text-[#c8a989]/68">
+                {buyBadge}
               </p>
-              <h2 className="font-display text-4xl leading-[0.98] tracking-[-0.035em] text-primary md:text-6xl">
-                {copy.buyTitle}
+              <h2 className="font-display text-4xl leading-[0.96] tracking-[-0.04em] text-[#f5ede3] md:text-5xl">
+                {buyTitle}
               </h2>
-              <p className="mt-5 max-w-xl text-base leading-7 text-primary/72 md:text-lg">
-                {copy.buyBody}
+              <p className="mt-6 text-base leading-7 text-[#e4d6c6]/72 md:text-[1.02rem]">
+                {buyBody}
               </p>
             </div>
 
-            <div className="mt-10 rounded-[2rem] bg-card/85 p-4 shadow-[0_24px_70px_rgba(42,29,20,0.08)] md:p-6">
-              {fallbackGallery.length > 0 ? (
-                <Gallery gallery={fallbackGallery as NonNullable<Product['gallery']>} />
-              ) : (
-                <div className="flex aspect-square items-center justify-center rounded-[1.5rem] border border-dashed text-sm text-primary/60">
-                  Няма качени изображения за този продукт.
+            <div className="grid gap-4 lg:grid-cols-[minmax(15rem,0.76fr)_minmax(21rem,0.92fr)] lg:items-stretch lg:gap-5">
+              {buyVisual ? (
+                <div className="order-2 overflow-hidden rounded-[1.75rem] border border-white/8 bg-[#241813] lg:order-1 lg:min-h-[35rem]">
+                  <div className="relative aspect-[1/0.92] md:aspect-[1/1] lg:h-full lg:aspect-auto">
+                    <Media
+                      fill
+                      priority
+                      resource={buyVisual}
+                      size="(min-width: 1024px) 28vw, 100vw"
+                      imgClassName="object-cover object-center"
+                    />
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
+              ) : null}
 
-          <div className="rounded-[2rem] border border-border/80 bg-card/90 p-6 shadow-[0_18px_50px_rgba(42,29,20,0.06)] md:p-8 lg:p-10">
-            <ProductDescription locale={locale} product={product} />
+              <div className="order-1 rounded-[1.75rem] border border-white/10 bg-[#221713] p-5 shadow-[0_22px_60px_rgba(0,0,0,0.24)] md:p-6 lg:order-2 lg:min-h-[35rem]">
+                <ProductDescription
+                  compact
+                  locale={locale}
+                  product={product}
+                  showDescription={false}
+                  tone="dark"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>

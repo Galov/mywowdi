@@ -5,6 +5,10 @@ import { adminOnly } from '@/access/adminOnly'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
+  labels: {
+    plural: 'Категории',
+    singular: 'Категория',
+  },
   access: {
     create: adminOnly,
     delete: adminOnly,
@@ -20,6 +24,7 @@ export const Categories: CollectionConfig = {
       name: 'title',
       localized: true,
       type: 'text',
+      label: 'Заглавие',
       required: true,
     },
     slugField({

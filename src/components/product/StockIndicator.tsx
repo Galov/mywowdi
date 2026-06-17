@@ -5,8 +5,10 @@ import { useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
 
 type Props = {
+  className?: string
   locale?: ContentLocale
   product: Product
+  tone?: 'dark' | 'light'
 }
 
 const stockCopy = {
@@ -22,7 +24,12 @@ const stockCopy = {
   },
 }
 
-export const StockIndicator: React.FC<Props> = ({ locale, product }) => {
+export const StockIndicator: React.FC<Props> = ({
+  className,
+  locale,
+  product,
+  tone = 'light',
+}) => {
   const searchParams = useSearchParams()
   const copy = locale === 'bg' ? stockCopy.bg : stockCopy.default
 
@@ -60,7 +67,9 @@ export const StockIndicator: React.FC<Props> = ({ locale, product }) => {
   }
 
   return (
-    <div className="text-sm tracking-[0.02em] text-primary/70">
+    <div
+      className={`${tone === 'dark' ? 'text-[#eadfce]/74' : 'text-primary/70'} text-sm leading-6 tracking-[0.02em] ${className ?? ''}`}
+    >
       {stockQuantity > 0 && <p>{copy.available}</p>}
       {(stockQuantity === 0 || !stockQuantity) && <p>{copy.outOfStock}</p>}
     </div>

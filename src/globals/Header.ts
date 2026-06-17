@@ -5,6 +5,10 @@ import { link } from '@/fields/link'
 
 export const Header: GlobalConfig = {
   slug: 'header',
+  label: 'Горна навигация',
+  admin: {
+    group: 'Съдържание',
+  },
   access: {
     read: () => true,
     update: adminOnly,
@@ -13,6 +17,7 @@ export const Header: GlobalConfig = {
     {
       name: 'navItems',
       type: 'array',
+      label: 'Навигационни елементи',
       fields: [
         link({
           appearances: false,

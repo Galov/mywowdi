@@ -22,8 +22,13 @@ import { DefaultDocumentIDType, Where } from 'payload'
 
 export const ProductsCollection: CollectionOverride = ({ defaultCollection }) => ({
   ...defaultCollection,
+  labels: {
+    plural: 'Продукти',
+    singular: 'Продукт',
+  },
   admin: {
     ...defaultCollection?.admin,
+    group: 'Търговия',
     defaultColumns: ['title', 'enableVariants', '_status', 'variants.variants'],
     livePreview: {
       url: ({ data, req }) =>
@@ -54,7 +59,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
     meta: true,
   },
   fields: [
-    { name: 'title', type: 'text', localized: true, required: true },
+    { name: 'title', type: 'text', localized: true, label: 'Заглавие', required: true },
     {
       type: 'tabs',
       tabs: [
@@ -64,6 +69,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
               name: 'description',
               localized: true,
               type: 'richText',
+              label: 'Описание',
               editor: lexicalEditor({
                 features: ({ rootFeatures }) => {
                   return [
@@ -75,23 +81,25 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                   ]
                 },
               }),
-              label: false,
               required: false,
             },
             {
               name: 'gallery',
               type: 'array',
+              label: 'Галерия',
               minRows: 1,
               fields: [
                 {
                   name: 'image',
                   type: 'upload',
+                  label: 'Изображение',
                   relationTo: 'media',
                   required: true,
                 },
                 {
                   name: 'variantOption',
                   type: 'relationship',
+                  label: 'Вариант',
                   relationTo: 'variantOptions',
                   admin: {
                     condition: (data) => {
@@ -136,6 +144,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
             {
               name: 'layout',
               type: 'blocks',
+              label: 'Допълнително съдържание',
               blocks: [CallToAction, Content, MediaBlock],
             },
           ],
@@ -147,6 +156,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
             {
               name: 'relatedProducts',
               type: 'relationship',
+              label: 'Свързани продукти',
               filterOptions: ({ id }) => {
                 if (id) {
                   return {
@@ -201,6 +211,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
     {
       name: 'categories',
       type: 'relationship',
+      label: 'Категории',
       admin: {
         position: 'sidebar',
         sortOptions: 'title',

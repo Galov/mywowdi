@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button'
 import { Product, Variant } from '@/payload-types'
 
 type GalleryItem = NonNullable<Product['gallery']>[number]
-type VariantSelection = Variant['options'][number]
+type VariantSelection = NonNullable<Variant['options']>[number]
 
 export function CartModal({ locale }: { locale: ContentLocale }) {
   const { cart } = useCart()

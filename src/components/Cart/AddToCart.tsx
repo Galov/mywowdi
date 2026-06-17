@@ -10,8 +10,10 @@ import { useSearchParams } from 'next/navigation'
 import React, { useCallback, useMemo } from 'react'
 import { toast } from 'sonner'
 type Props = {
+  className?: string
   locale?: ContentLocale
   product: Product
+  tone?: 'dark' | 'light'
 }
 
 const addToCartCopy = {
@@ -25,7 +27,7 @@ const addToCartCopy = {
   },
 }
 
-export function AddToCart({ locale, product }: Props) {
+export function AddToCart({ className, locale, product, tone = 'light' }: Props) {
   const { addItem, cart, isLoading } = useCart()
   const searchParams = useSearchParams()
   const copy = locale === 'bg' ? addToCartCopy.bg : addToCartCopy.default
@@ -114,6 +116,8 @@ export function AddToCart({ locale, product }: Props) {
       variant={'default'}
       className={clsx(
         'h-12 w-full rounded-full px-6 text-[0.72rem] font-semibold uppercase tracking-[0.22em] shadow-none',
+        tone === 'dark' && 'bg-[#c8a989] text-[#23160f] hover:bg-[#d7b798]',
+        className,
       )}
       disabled={disabled || isLoading}
       onClick={addToCart}

@@ -17,22 +17,22 @@ export const hero: Field = {
       name: 'type',
       type: 'select',
       defaultValue: 'lowImpact',
-      label: 'Type',
+      label: 'Тип',
       options: [
         {
-          label: 'None',
+          label: 'Без херо секция',
           value: 'none',
         },
         {
-          label: 'High Impact',
+          label: 'Силен акцент',
           value: 'highImpact',
         },
         {
-          label: 'Medium Impact',
+          label: 'Среден акцент',
           value: 'mediumImpact',
         },
         {
-          label: 'Low Impact',
+          label: 'Лек акцент',
           value: 'lowImpact',
         },
       ],
@@ -42,6 +42,7 @@ export const hero: Field = {
       name: 'richText',
       localized: true,
       type: 'richText',
+      label: 'Текст',
       editor: lexicalEditor({
         features: ({ rootFeatures }) => {
           return [
@@ -52,7 +53,6 @@ export const hero: Field = {
           ]
         },
       }),
-      label: false,
     },
     linkGroup({
       overrides: {
@@ -62,6 +62,7 @@ export const hero: Field = {
     {
       name: 'media',
       type: 'upload',
+      label: 'Изображение',
       admin: {
         condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
       },
@@ -69,5 +70,5 @@ export const hero: Field = {
       required: true,
     },
   ],
-  label: false,
+  label: 'Херо секция',
 }
