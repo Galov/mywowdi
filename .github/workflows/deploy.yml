@@ -63,6 +63,16 @@ jobs:
             Caddyfile \
             "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ env.DEPLOY_PATH }}/"
 
+      - name: Sync media files
+        run: |
+          ssh -i ~/.ssh/deploy_key "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            "mkdir -p '${{ env.DEPLOY_PATH }}/media'"
+
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            public/media/ \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ env.DEPLOY_PATH }}/media/"
+
       - name: Deploy on server
         run: |
           ssh -i ~/.ssh/deploy_key "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" << EOF

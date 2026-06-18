@@ -1,3 +1,36 @@
+# MYWOWDI Project Notes
+
+## Media During Development
+
+This project currently uses a temporary filesystem-based media workflow.
+
+- The shared MongoDB database is common between local development and production.
+- Uploaded media files are **not** shared automatically between environments.
+- Local development reads files from `public/media`.
+- Production reads files from `/srv/mywowdi/media`, mounted into the container as `/app/public/media`.
+
+### Current source of truth
+
+The local `public/media` directory is the source of truth during development.
+
+### What happens on deploy
+
+The GitHub Actions deploy workflow now syncs `public/media/` to the server with `rsync --delete`.
+
+This means:
+
+- files added locally will be uploaded to production on deploy
+- files deleted locally will also be deleted from production on deploy
+- files uploaded directly through `mywowdi.com/admin` will be overwritten on the next deploy if they do not also exist locally
+
+### Working rule
+
+During development, upload media locally and treat production media uploads as temporary only.
+
+## Future improvement
+
+The proper long-term solution is to move media storage to a shared object storage service such as Cloudflare R2, so both local and production environments use the same files.
+
 # Payload Ecommerce Template
 
 This template is in **BETA**.
