@@ -65,6 +65,8 @@ jobs:
 
       - name: Sync media files
         run: |
+          mkdir -p public/media
+
           ssh -i ~/.ssh/deploy_key "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
             "mkdir -p '${{ env.DEPLOY_PATH }}/media'"
 
