@@ -413,6 +413,114 @@ export interface Page {
    * Кратък текст под заглавието в секцията за покупка.
    */
   homeBuyBody?: string | null;
+  /**
+   * Основното заглавие в секцията за материалите.
+   */
+  homeMaterialsTitle?: string | null;
+  /**
+   * Трите акцента под заглавието. Всеки акцент има икона, кратко заглавие и кратък текст.
+   */
+  homeMaterialsItems?:
+    | {
+        icon: 'leaf' | 'rings' | 'hand';
+        title: string;
+        body: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Голямото изображение вдясно в секцията за материалите.
+   */
+  homeMaterialsImage?: (string | null) | Media;
+  /**
+   * Заглавието над галерийната лента.
+   */
+  homeGalleryTitle?: string | null;
+  /**
+   * Кратък текст над галерията.
+   */
+  homeGalleryBody?: string | null;
+  /**
+   * Избери точно тези изображения, които искаш да се показват в галерията.
+   */
+  homeGalleryImages?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Основното заглавие в секцията за предимствата.
+   */
+  homeBenefitsTitle?: string | null;
+  /**
+   * Краткият текст под заглавието.
+   */
+  homeBenefitsBody?: string | null;
+  /**
+   * Трите акцента в долната част на секцията.
+   */
+  homeBenefitsItems?:
+    | {
+        icon: 'circle' | 'shield' | 'infinity';
+        title: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Голямото изображение вляво в секцията за предимствата.
+   */
+  homeBenefitsImage?: (string | null) | Media;
+  /**
+   * Основното заглавие в секцията за доставка и доверие.
+   */
+  homeTrustTitle?: string | null;
+  /**
+   * Краткото въведение вляво.
+   */
+  homeTrustBody?: string | null;
+  /**
+   * Трите кратки акцента в средната колона.
+   */
+  homeTrustItems?:
+    | {
+        title: string;
+        body: string;
+        id?: string | null;
+      }[]
+    | null;
+  homeTrustNotesTitle?: string | null;
+  /**
+   * Кратки practically useful редове вдясно.
+   */
+  homeTrustNotes?:
+    | {
+        title: string;
+        body: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Основното заглавие на секцията с често задавани въпроси.
+   */
+  homeFaqTitle?: string | null;
+  /**
+   * Кратък въвеждащ текст над списъка с въпроси.
+   */
+  homeFaqBody?: string | null;
+  /**
+   * Списъкът с въпроси и отговори.
+   */
+  homeFaqItems?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  homeClosingEyebrow?: string | null;
+  homeClosingTitle?: string | null;
+  homeClosingButton?: string | null;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
     richText?: {
@@ -1517,6 +1625,63 @@ export interface PagesSelect<T extends boolean = true> {
   homeBuyBadge?: T;
   homeBuyTitle?: T;
   homeBuyBody?: T;
+  homeMaterialsTitle?: T;
+  homeMaterialsItems?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  homeMaterialsImage?: T;
+  homeGalleryTitle?: T;
+  homeGalleryBody?: T;
+  homeGalleryImages?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  homeBenefitsTitle?: T;
+  homeBenefitsBody?: T;
+  homeBenefitsItems?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        id?: T;
+      };
+  homeBenefitsImage?: T;
+  homeTrustTitle?: T;
+  homeTrustBody?: T;
+  homeTrustItems?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  homeTrustNotesTitle?: T;
+  homeTrustNotes?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  homeFaqTitle?: T;
+  homeFaqBody?: T;
+  homeFaqItems?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  homeClosingEyebrow?: T;
+  homeClosingTitle?: T;
+  homeClosingButton?: T;
   hero?:
     | T
     | {

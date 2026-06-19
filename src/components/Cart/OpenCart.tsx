@@ -25,7 +25,7 @@ export function OpenCartButton({
     <Button
       variant="nav"
       size="clear"
-      className="navLink relative items-end hover:cursor-pointer"
+      className="navLink relative items-end text-[#eadfce] hover:cursor-pointer hover:text-[#fbf5ec]"
       {...rest}
     >
       <span>{label}</span>

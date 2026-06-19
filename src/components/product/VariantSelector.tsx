@@ -1,13 +1,17 @@
 'use client'
 
+import { Media } from '@/components/Media'
 import { Button } from '@/components/ui/button'
 import type { ContentLocale } from '@/i18n/config'
 import type { Product } from '@/payload-types'
 
 import { createUrl } from '@/utilities/createUrl'
 import clsx from 'clsx'
+import { ChevronDownIcon } from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+
+type GalleryItem = NonNullable<Product['gallery']>[number]
 
 function resolveSwatchColor(option: unknown, fallbackLabel: string) {
   if (option && typeof option === 'object' && 'swatchColor' in option) {
@@ -46,10 +50,12 @@ function resolveSwatchColor(option: unknown, fallbackLabel: string) {
 }
 
 export function VariantSelector({
+  galleryItems,
   locale,
   product,
   tone = 'light',
 }: {
+  galleryItems?: GalleryItem[]
   locale: ContentLocale
   product: Product
   tone?: 'dark' | 'light'
@@ -60,6 +66,30 @@ export function VariantSelector({
   const variants = product.variants?.docs
   const variantTypes = product.variantTypes
   const hasVariants = Boolean(product.enableVariants && variants?.length && variantTypes?.length)
+  const [expandedOptionId, setExpandedOptionId] = useState<string | null>(null)
+
+  const selectedOptionIds = useMemo(() => {
+    return variantTypes
+      ?.map((type) => {
+        if (!type || typeof type !== 'object') return null
+
+        const selected = searchParams.get(type.name)
+        return selected ? String(selected) : null
+      })
+      .filter((value): value is string => Boolean(value)) || []
+  }, [searchParams, variantTypes])
+
+  useEffect(() => {
+    if (!hasVariants) {
+      return
+    }
+
+    if (!selectedOptionIds.length) {
+      return
+    }
+
+    setExpandedOptionId((current) => current || selectedOptionIds[0] || null)
+  }, [hasVariants, selectedOptionIds])
 
   if (!hasVariants) {
     return null
@@ -145,11 +175,20 @@ export function VariantSelector({
               const isActive =
                 Boolean(isAvailableForSale) &&
                 searchParams.get(optionKeyLowerCase) === String(optionID)
+              const isExpanded = expandedOptionId === String(optionID)
               const optionDescription =
                 'shortDescription' in option && typeof option.shortDescription === 'string'
                   ? option.shortDescription
                   : ''
               const swatchColor = resolveSwatchColor(option, option.label)
+              const optionImage = galleryItems?.find((item) => {
+                if (!item?.variantOption || typeof item.image !== 'object') return false
+
+                const variantOptionID =
+                  typeof item.variantOption === 'object' ? item.variantOption.id : item.variantOption
+
+                return String(variantOptionID) === String(optionID)
+              })
 
               return (
                 <Button
@@ -157,7 +196,7 @@ export function VariantSelector({
                   size="clear"
                   aria-disabled={!isAvailableForSale}
                   className={clsx(
-                    'min-h-[4.5rem] w-full overflow-hidden whitespace-normal rounded-[1rem] border px-4 py-3.5 text-left shadow-none',
+                    '!block min-h-[4.5rem] w-full overflow-hidden whitespace-normal rounded-[1rem] border px-4 py-3.5 text-left shadow-none',
                     tone === 'dark'
                       ? 'border-white/10 bg-white/[0.025] text-[#eadfce]/74 hover:bg-white/[0.05] hover:text-[#fbf5ec]'
                       : 'border-border/80 bg-card text-primary/64 hover:bg-card',
@@ -172,13 +211,21 @@ export function VariantSelector({
                   disabled={!isAvailableForSale}
                   key={option.id}
                   onClick={() => {
+                    const clickedID = String(optionID)
+
+                    setExpandedOptionId((current) => (current === clickedID ? null : clickedID))
+
+                    if (isActive) {
+                      return
+                    }
+
                     router.replace(`${optionUrl}`, {
                       scroll: false,
                     })
                   }}
                   title={`${option.label} ${!isAvailableForSale ? ' (Out of Stock)' : ''}`}
                 >
-                  <span className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1.5">
+                  <span className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto_auto] items-start gap-x-3 gap-y-1.5">
                     <span
                       className={clsx(
                         'mt-[0.28rem] size-3 shrink-0 rounded-full ring-1',
@@ -196,14 +243,40 @@ export function VariantSelector({
                         isActive ? 'opacity-100' : 'opacity-0',
                       )}
                     />
+                    <ChevronDownIcon
+                      className={clsx(
+                        'col-start-4 row-start-1 ml-auto size-4 shrink-0 transition-transform md:hidden',
+                        tone === 'dark' ? 'text-[#eadfce]/38' : 'text-primary/40',
+                        isExpanded ? 'rotate-180' : 'rotate-0',
+                      )}
+                    />
                     {optionDescription ? (
                       <span
                         className={clsx(
                           'col-start-2 col-end-4 min-w-0 break-words pr-1 text-xs normal-case leading-5 tracking-[0.01em]',
+                          'md:col-end-5',
                           tone === 'dark' ? 'text-[#eadfce]/54' : 'text-primary/50',
                         )}
                       >
                         {optionDescription}
+                      </span>
+                    ) : null}
+                    {optionImage && typeof optionImage.image === 'object' ? (
+                      <span
+                        className={clsx(
+                          'col-span-full mt-2 overflow-hidden rounded-[0.85rem] md:hidden',
+                          isExpanded ? 'block' : 'hidden',
+                        )}
+                      >
+                        <span className="relative block aspect-[1.18/1]">
+                          <Media
+                            fill
+                            priority={isExpanded}
+                            resource={optionImage.image}
+                            size="100vw"
+                            imgClassName="object-cover object-center"
+                          />
+                        </span>
                       </span>
                     ) : null}
                   </span>

@@ -15,24 +15,24 @@ export async function Footer({ locale }: { locale: ContentLocale }) {
   const menu = footer.navItems || []
   const currentYear = new Date().getFullYear()
   const copyrightDate = 2023 + (currentYear > 2023 ? `-${currentYear}` : '')
-  const skeleton = 'w-full h-6 animate-pulse rounded bg-neutral-200'
+  const skeleton = 'h-6 w-full animate-pulse rounded bg-white/8'
 
   const copyrightName = COMPANY_NAME || SITE_NAME || ''
   const isBulgarian = locale === 'bg'
 
   return (
-    <footer className="text-sm text-primary/62">
+    <footer className="bg-[linear-gradient(180deg,#120c0a_0%,#1b130f_50%,#120c0a_100%)] text-sm text-[#d8c8b7]/72">
       <div className="container">
-        <div className="flex w-full flex-col gap-8 border-t border-border/80 py-12 text-sm md:flex-row md:gap-12">
+        <div className="flex w-full flex-col gap-8 border-t border-white/10 py-12 text-sm md:flex-row md:gap-12">
           <div className="md:min-w-44">
             <Link
-              className="flex items-center gap-3 text-primary md:pt-1"
+              className="flex items-center gap-3 text-[#f2e7da] md:pt-1"
               href={getLocalizedHref(locale, '/')}
             >
               <LogoIcon className="w-12" />
               <span className="font-display text-xl">{SITE_NAME}</span>
             </Link>
-            <p className="mt-4 max-w-xs leading-6 text-primary/62">
+            <p className="mt-4 max-w-xs leading-6 text-[#d8c8b7]/68">
               {isBulgarian
                 ? 'Тихо присъствие, естествени материали и премиум усещане за ръката.'
                 : 'Quiet presence, natural materials and a premium tactile feel.'}
@@ -54,14 +54,14 @@ export async function Footer({ locale }: { locale: ContentLocale }) {
           </Suspense>
         </div>
       </div>
-      <div className="border-t border-border/80 py-6 text-sm">
+      <div className="border-t border-white/10 py-6 text-sm text-[#d8c8b7]/66">
         <div className="container mx-auto flex w-full flex-col items-center gap-1 md:flex-row md:gap-0">
           <p>
             &copy; {copyrightDate} {copyrightName}
             {copyrightName.length && !copyrightName.endsWith('.') ? '.' : ''}{' '}
             {isBulgarian ? 'Всички права запазени.' : 'All rights reserved.'}
           </p>
-          <hr className="mx-4 hidden h-4 w-px border-l border-border md:inline-block" />
+          <hr className="mx-4 hidden h-4 w-px border-l border-white/12 md:inline-block" />
           <p>{isBulgarian ? 'Създадено за европейския пазар.' : 'Designed for the European market.'}</p>
         </div>
       </div>

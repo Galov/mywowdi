@@ -159,13 +159,6 @@ export const Pages: CollectionConfig = {
           },
         },
         {
-          fields: [],
-          label: 'Варианти',
-          admin: {
-            condition: (_data, siblingData) => siblingData?.slug === 'home',
-          },
-        },
-        {
           fields: [
             {
               name: 'homeBuyBadge',
@@ -207,36 +200,402 @@ export const Pages: CollectionConfig = {
           },
         },
         {
-          fields: [],
+          fields: [
+            {
+              name: 'homeMaterialsTitle',
+              type: 'textarea',
+              localized: true,
+              label: 'Основно заглавие',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Основното заглавие в секцията за материалите.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeMaterialsItems',
+              type: 'array',
+              label: 'Материални акценти',
+              minRows: 3,
+              maxRows: 3,
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description:
+                  'Трите акцента под заглавието. Всеки акцент има икона, кратко заглавие и кратък текст.',
+                initCollapsed: false,
+              },
+              fields: [
+                {
+                  name: 'icon',
+                  type: 'select',
+                  label: 'Икона',
+                  defaultValue: 'leaf',
+                  options: [
+                    {
+                      label: 'Лист',
+                      value: 'leaf',
+                    },
+                    {
+                      label: 'Концентрични кръгове',
+                      value: 'rings',
+                    },
+                    {
+                      label: 'Ръка',
+                      value: 'hand',
+                    },
+                  ],
+                  required: true,
+                },
+                {
+                  name: 'title',
+                  type: 'text',
+                  localized: true,
+                  label: 'Заглавие',
+                  required: true,
+                },
+                {
+                  name: 'body',
+                  type: 'textarea',
+                  localized: true,
+                  label: 'Кратък текст',
+                  required: true,
+                },
+              ],
+            },
+            {
+              name: 'homeMaterialsImage',
+              type: 'upload',
+              label: 'Основно изображение',
+              relationTo: 'media',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Голямото изображение вдясно в секцията за материалите.',
+              },
+            },
+          ],
           label: 'Материали',
           admin: {
             condition: (_data, siblingData) => siblingData?.slug === 'home',
           },
         },
         {
-          fields: [],
+          fields: [
+            {
+              name: 'homeGalleryTitle',
+              type: 'textarea',
+              localized: true,
+              label: 'Основно заглавие',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Заглавието над галерийната лента.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeGalleryBody',
+              type: 'textarea',
+              localized: true,
+              label: 'Кратък текст',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Кратък текст над галерията.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeGalleryImages',
+              type: 'array',
+              label: 'Изображения',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description:
+                  'Избери точно тези изображения, които искаш да се показват в галерията.',
+                initCollapsed: false,
+              },
+              fields: [
+                {
+                  name: 'image',
+                  type: 'upload',
+                  label: 'Изображение',
+                  relationTo: 'media',
+                  required: true,
+                },
+              ],
+            },
+          ],
           label: 'Галерия',
           admin: {
             condition: (_data, siblingData) => siblingData?.slug === 'home',
           },
         },
         {
-          fields: [],
+          fields: [
+            {
+              name: 'homeBenefitsTitle',
+              type: 'textarea',
+              localized: true,
+              label: 'Основно заглавие',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Основното заглавие в секцията за предимствата.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeBenefitsBody',
+              type: 'textarea',
+              localized: true,
+              label: 'Кратък текст',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Краткият текст под заглавието.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeBenefitsItems',
+              type: 'array',
+              label: 'Предимства',
+              minRows: 3,
+              maxRows: 3,
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Трите акцента в долната част на секцията.',
+                initCollapsed: false,
+              },
+              fields: [
+                {
+                  name: 'icon',
+                  type: 'select',
+                  label: 'Икона',
+                  defaultValue: 'circle',
+                  options: [
+                    {
+                      label: 'Кръг',
+                      value: 'circle',
+                    },
+                    {
+                      label: 'Щит',
+                      value: 'shield',
+                    },
+                    {
+                      label: 'Безкрайност',
+                      value: 'infinity',
+                    },
+                  ],
+                  required: true,
+                },
+                {
+                  name: 'title',
+                  type: 'text',
+                  localized: true,
+                  label: 'Заглавие',
+                  required: true,
+                },
+              ],
+            },
+            {
+              name: 'homeBenefitsImage',
+              type: 'upload',
+              label: 'Основно изображение',
+              relationTo: 'media',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Голямото изображение вляво в секцията за предимствата.',
+              },
+            },
+          ],
           label: 'Предимства',
           admin: {
             condition: (_data, siblingData) => siblingData?.slug === 'home',
           },
         },
         {
-          fields: [],
-          label: 'Доставка и доверие',
+          fields: [
+            {
+              name: 'homeTrustTitle',
+              type: 'textarea',
+              localized: true,
+              label: 'Основно заглавие',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Основното заглавие в секцията за доставка и доверие.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeTrustBody',
+              type: 'textarea',
+              localized: true,
+              label: 'Кратък текст',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Краткото въведение вляво.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeTrustItems',
+              type: 'array',
+              label: 'Доверителни акценти',
+              minRows: 3,
+              maxRows: 3,
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Трите кратки акцента в средната колона.',
+                initCollapsed: false,
+              },
+              fields: [
+                {
+                  name: 'title',
+                  type: 'text',
+                  localized: true,
+                  label: 'Заглавие',
+                  required: true,
+                },
+                {
+                  name: 'body',
+                  type: 'textarea',
+                  localized: true,
+                  label: 'Кратък текст',
+                  required: true,
+                },
+              ],
+            },
+            {
+              name: 'homeTrustNotesTitle',
+              type: 'text',
+              localized: true,
+              label: 'Заглавие на практичната колона',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+              },
+              required: false,
+            },
+            {
+              name: 'homeTrustNotes',
+              type: 'array',
+              label: 'Практични бележки',
+              minRows: 2,
+              maxRows: 4,
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Кратки practically useful редове вдясно.',
+                initCollapsed: false,
+              },
+              fields: [
+                {
+                  name: 'title',
+                  type: 'text',
+                  localized: true,
+                  label: 'Заглавие',
+                  required: true,
+                },
+                {
+                  name: 'body',
+                  type: 'textarea',
+                  localized: true,
+                  label: 'Кратък текст',
+                  required: true,
+                },
+              ],
+            },
+          ],
+          label: 'Доставка',
           admin: {
             condition: (_data, siblingData) => siblingData?.slug === 'home',
           },
         },
         {
-          fields: [],
+          fields: [
+            {
+              name: 'homeFaqTitle',
+              type: 'textarea',
+              localized: true,
+              label: 'Основно заглавие',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Основното заглавие на секцията с често задавани въпроси.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeFaqBody',
+              type: 'textarea',
+              localized: true,
+              label: 'Кратък текст',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Кратък въвеждащ текст над списъка с въпроси.',
+              },
+              required: false,
+            },
+            {
+              name: 'homeFaqItems',
+              type: 'array',
+              label: 'Въпроси',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+                description: 'Списъкът с въпроси и отговори.',
+                initCollapsed: false,
+              },
+              fields: [
+                {
+                  name: 'question',
+                  type: 'text',
+                  localized: true,
+                  label: 'Въпрос',
+                  required: true,
+                },
+                {
+                  name: 'answer',
+                  type: 'textarea',
+                  localized: true,
+                  label: 'Отговор',
+                  required: true,
+                },
+              ],
+            },
+          ],
           label: 'ЧЗВ',
+          admin: {
+            condition: (_data, siblingData) => siblingData?.slug === 'home',
+          },
+        },
+        {
+          fields: [
+            {
+              name: 'homeClosingEyebrow',
+              type: 'text',
+              localized: true,
+              label: 'Малък текст над заглавието',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+              },
+              required: false,
+            },
+            {
+              name: 'homeClosingTitle',
+              type: 'textarea',
+              localized: true,
+              label: 'Основно заглавие',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+              },
+              required: false,
+            },
+            {
+              name: 'homeClosingButton',
+              type: 'text',
+              localized: true,
+              label: 'Текст на бутона',
+              admin: {
+                condition: (_data, siblingData) => siblingData?.slug === 'home',
+              },
+              required: false,
+            },
+          ],
+          label: 'Финален акцент',
           admin: {
             condition: (_data, siblingData) => siblingData?.slug === 'home',
           },

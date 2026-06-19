@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { ContentLocale } from '@/i18n/config'
-import type { Media as MediaType } from '@/payload-types'
+import type { Media as MediaType, Page } from '@/payload-types'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { HomeStorefront } from './HomeStorefront'
@@ -27,6 +27,66 @@ type HomeHeroContent = {
 type HomeBuyContent = {
   badge?: string | null
   body?: string | null
+  title?: string | null
+}
+
+type HomeMaterialsItem = {
+  body?: string | null
+  icon?: 'hand' | 'leaf' | 'rings' | null
+  title?: string | null
+}
+
+type HomeMaterialsContent = {
+  image?: MediaType
+  items?: HomeMaterialsItem[] | null
+  title?: string | null
+}
+
+type HomeGalleryContent = {
+  body?: string | null
+  images?: MediaType[] | null
+  title?: string | null
+}
+
+type HomeBenefitsItem = {
+  icon?: 'circle' | 'infinity' | 'shield' | null
+  title?: string | null
+}
+
+type HomeBenefitsContent = {
+  body?: string | null
+  image?: MediaType
+  items?: HomeBenefitsItem[] | null
+  title?: string | null
+}
+
+type HomeTrustItem = {
+  body?: string | null
+  title?: string | null
+}
+
+type HomeTrustContent = {
+  body?: string | null
+  items?: HomeTrustItem[] | null
+  notes?: HomeTrustItem[] | null
+  notesTitle?: string | null
+  title?: string | null
+}
+
+type HomeFaqItem = {
+  answer?: string | null
+  question?: string | null
+}
+
+type HomeFaqContent = {
+  body?: string | null
+  items?: HomeFaqItem[] | null
+  title?: string | null
+}
+
+type HomeClosingContent = {
+  button?: string | null
+  eyebrow?: string | null
   title?: string | null
 }
 
@@ -97,14 +157,76 @@ export async function CMSPage({ params }: Args) {
         title: page?.homeBuyTitle,
       }
     : undefined
+  const homeMaterialsImage =
+    page?.homeMaterialsImage && typeof page.homeMaterialsImage === 'object'
+      ? page.homeMaterialsImage
+      : undefined
+  const homeMaterialsContent: HomeMaterialsContent | undefined = isHomePage
+    ? {
+        image: homeMaterialsImage,
+        items: page?.homeMaterialsItems as HomeMaterialsItem[] | null | undefined,
+        title: page?.homeMaterialsTitle,
+      }
+    : undefined
+  const homeGalleryContent: HomeGalleryContent | undefined = isHomePage
+    ? {
+        body: page?.homeGalleryBody,
+        images:
+          page?.homeGalleryImages
+            ?.map((item) => (item?.image && typeof item.image === 'object' ? item.image : null))
+            .filter((item): item is MediaType => Boolean(item)) || null,
+        title: page?.homeGalleryTitle,
+      }
+    : undefined
+  const homeBenefitsImage =
+    page?.homeBenefitsImage && typeof page.homeBenefitsImage === 'object'
+      ? page.homeBenefitsImage
+      : undefined
+  const homeBenefitsContent: HomeBenefitsContent | undefined = isHomePage
+    ? {
+        body: page?.homeBenefitsBody,
+        image: homeBenefitsImage,
+        items: page?.homeBenefitsItems as HomeBenefitsItem[] | null | undefined,
+        title: page?.homeBenefitsTitle,
+      }
+    : undefined
+  const homeTrustContent: HomeTrustContent | undefined = isHomePage
+    ? {
+        body: page?.homeTrustBody,
+        items: page?.homeTrustItems as HomeTrustItem[] | null | undefined,
+        notes: page?.homeTrustNotes as HomeTrustItem[] | null | undefined,
+        notesTitle: page?.homeTrustNotesTitle,
+        title: page?.homeTrustTitle,
+      }
+    : undefined
+  const homeFaqContent: HomeFaqContent | undefined = isHomePage
+    ? {
+        body: page?.homeFaqBody,
+        items: page?.homeFaqItems as HomeFaqItem[] | null | undefined,
+        title: page?.homeFaqTitle,
+      }
+    : undefined
+  const homeClosingContent: HomeClosingContent | undefined = isHomePage
+    ? {
+        button: page?.homeClosingButton,
+        eyebrow: page?.homeClosingEyebrow,
+        title: page?.homeClosingTitle,
+      }
+    : undefined
 
   return (
-    <article className={hasHero || isHomePage ? 'pb-24' : 'pt-16 pb-24'}>
+    <article className={isHomePage ? '' : hasHero ? 'pb-24' : 'pt-16 pb-24'}>
       {hero ? <RenderHero {...hero} locale={locale} /> : null}
       {isHomePage ? (
         <HomeStorefront
+          benefitsContent={homeBenefitsContent}
           buyContent={homeBuyContent}
+          closingContent={homeClosingContent}
+          faqContent={homeFaqContent}
+          galleryContent={homeGalleryContent}
           heroContent={homeHeroContent}
+          materialsContent={homeMaterialsContent}
+          trustContent={homeTrustContent}
           locale={locale}
         />
       ) : null}
@@ -159,5 +281,5 @@ const queryPageBySlug = async ({
     },
   })
 
-  return result.docs?.[0] || null
+  return (result.docs?.[0] as Page | undefined) || null
 }

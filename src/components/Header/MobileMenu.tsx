@@ -50,13 +50,16 @@ export function MobileMenu({ locale, menu }: Props) {
 
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
-      <SheetTrigger className="relative flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 bg-white text-black transition-colors">
+      <SheetTrigger className="relative flex h-11 w-11 items-center justify-center rounded-md border border-white/12 bg-[#1b130f] text-[#f2e7da] transition-colors">
         <MenuIcon className="h-4" />
       </SheetTrigger>
 
-      <SheetContent side="left" className="px-4">
+      <SheetContent
+        side="left"
+        className="border-white/10 !bg-[#120c0a] px-4 text-[#f2e7da] shadow-[0_24px_80px_rgba(0,0,0,0.38)]"
+      >
         <SheetHeader className="px-0 pt-4 pb-0">
-          <SheetTitle>My Store</SheetTitle>
+          <SheetTitle className="text-[#f2e7da]">MYWOWDI</SheetTitle>
 
           <SheetDescription />
         </SheetHeader>
@@ -75,8 +78,8 @@ export function MobileMenu({ locale, menu }: Props) {
 
         {user ? (
           <div className="mt-4">
-            <h2 className="text-xl mb-4">My account</h2>
-            <hr className="my-2" />
+            <h2 className="mb-4 text-xl text-[#f2e7da]">My account</h2>
+            <hr className="my-2 border-white/10" />
             <ul className="flex flex-col gap-2">
               <li>
                 <Link href={getLocalizedHref(locale, '/orders')}>Orders</Link>
@@ -96,12 +99,12 @@ export function MobileMenu({ locale, menu }: Props) {
           </div>
         ) : (
           <div>
-            <h2 className="text-xl mb-4">My account</h2>
+            <h2 className="mb-4 text-xl text-[#f2e7da]">My account</h2>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
               <Button asChild className="w-full sm:flex-1" variant="outline">
                 <Link href={getLocalizedHref(locale, '/login')}>Log in</Link>
               </Button>
-              <span className="text-center text-sm text-muted-foreground sm:text-base">or</span>
+              <span className="text-center text-sm text-[#eadfce]/52 sm:text-base">or</span>
               <Button asChild className="w-full sm:flex-1">
                 <Link href={getLocalizedHref(locale, '/create-account')}>Create an account</Link>
               </Button>

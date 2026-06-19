@@ -24,7 +24,7 @@ export function HeaderClient({ header, locale }: Props) {
   const pathname = usePathname()
 
   return (
-    <div className="sticky top-0 z-30 border-b border-border/70 bg-background/90 backdrop-blur-xl">
+    <div className="sticky top-0 z-30 border-b border-white/10 bg-[#120c0a] text-[#f2e7da] backdrop-blur-xl md:bg-[#120c0a]/88">
       <nav className="container flex items-center justify-between py-3 md:py-4">
         <div className="block flex-none md:hidden">
           <Suspense fallback={null}>
@@ -34,13 +34,13 @@ export function HeaderClient({ header, locale }: Props) {
         <div className="flex w-full items-center justify-between">
           <div className="flex w-full items-center gap-6 md:w-1/3">
             <Link
-              className="flex w-full items-center justify-center md:w-auto"
+              className="flex w-full items-center justify-center text-[#f2e7da] md:w-auto"
               href={getLocalizedHref(locale, '/')}
             >
               <LogoIcon className="h-auto w-11 md:w-12" />
             </Link>
             {menu.length ? (
-              <ul className="hidden gap-4 text-sm md:flex md:items-center">
+              <ul className="hidden gap-4 text-sm text-[#eadfce]/74 md:flex md:items-center">
                 {menu.map((item) => (
                   <li key={item.id}>
                     <CMSLink

@@ -23,12 +23,14 @@ const productCopy = {
 
 export function ProductDescription({
   compact = false,
+  galleryItems,
   locale,
   product,
   showDescription = true,
   tone = 'light',
 }: {
   compact?: boolean
+  galleryItems?: NonNullable<Product['gallery']>
   locale: ContentLocale
   product: Product
   showDescription?: boolean
@@ -129,11 +131,11 @@ export function ProductDescription({
       {hasVariants && (
         <div
           className={`space-y-2 border-y ${
-            compact ? 'py-3.5' : 'py-6'
-          } ${isDark ? 'border-white/10' : 'border-border/80'}`}
+          compact ? 'py-3.5' : 'py-6'
+        } ${isDark ? 'border-white/10' : 'border-border/80'}`}
         >
           <Suspense fallback={null}>
-            <VariantSelector locale={locale} product={product} tone={tone} />
+            <VariantSelector galleryItems={galleryItems} locale={locale} product={product} tone={tone} />
           </Suspense>
         </div>
       )}
