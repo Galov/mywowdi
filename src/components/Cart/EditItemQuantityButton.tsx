@@ -1,12 +1,16 @@
 'use client'
 
 import { CartItem } from '@/components/Cart'
+import { getCartCopy } from '@/components/checkout/copy'
+import { useCurrentLocale } from '@/i18n/useCurrentLocale'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import clsx from 'clsx'
 import { MinusIcon, PlusIcon } from 'lucide-react'
 import React, { useMemo } from 'react'
 
 export function EditItemQuantityButton({ type, item }: { item: CartItem; type: 'minus' | 'plus' }) {
+  const locale = useCurrentLocale()
+  const copy = getCartCopy(locale)
   const { decrementItem, incrementItem, isLoading } = useCart()
 
   const disabled = useMemo(() => {
@@ -37,7 +41,7 @@ export function EditItemQuantityButton({ type, item }: { item: CartItem; type: '
     <form>
       <button
         disabled={disabled || isLoading}
-        aria-label={type === 'plus' ? 'Increase item quantity' : 'Reduce item quantity'}
+        aria-label={type === 'plus' ? copy.increaseQuantity : copy.decreaseQuantity}
         className={clsx(
           'ease hover:cursor-pointer flex h-full min-w-[36px] max-w-[36px] flex-none items-center justify-center rounded-full px-2 transition-all duration-200 hover:border-neutral-800 hover:opacity-80',
           {

@@ -8,11 +8,13 @@ import { ecommercePlugin, EUR } from '@payloadcms/plugin-ecommerce'
 import { stripeAdapter } from '@payloadcms/plugin-ecommerce/payments/stripe'
 
 import { Page, Product } from '@/payload-types'
+import { buildFormSubmissionEmail, getFormSubmissionSubject } from '@/utilities/email/templates'
 import { getServerSideURL } from '@/utilities/getURL'
 import { ProductsCollection } from '@/collections/Products'
 import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
 import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
+import { normalizeLocale } from '@/i18n/routing'
 import { isAdmin } from '@/access/isAdmin'
 import { isDocumentOwner } from '@/access/isDocumentOwner'
 
@@ -72,6 +74,7 @@ const collectionOrder = [
   'variantTypes',
   'variantOptions',
   'variants',
+  'inquiries',
   'orders',
   'transactions',
   'carts',
@@ -85,6 +88,105 @@ const collectionOrder = [
 ] as const
 
 const collectionOrderIndex = new Map<string, number>(collectionOrder.map((slug, index) => [slug, index]))
+
+const escapeHTML = (value: unknown) =>
+  String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+
+const prettifySubmissionFieldName = (field?: string) => {
+  if (!field) return ''
+
+  const knownLabels: Record<string, string> = {
+    email: 'Имейл',
+    firstName: 'Име',
+    lastName: 'Фамилия',
+    message: 'Съобщение',
+    name: 'Име',
+    phone: 'Телефон',
+    subject: 'Тема',
+  }
+
+  if (knownLabels[field]) {
+    return knownLabels[field]
+  }
+
+  const normalized = field
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replaceAll('-', ' ')
+    .replaceAll('_', ' ')
+    .trim()
+
+  if (!normalized) return field
+
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1)
+}
+
+const buildSubmissionTableHTML = (
+  submissionData: Array<{ field?: string; value?: unknown }> = [],
+) => {
+  const rows = submissionData
+    .filter((item) => item?.field)
+    .map((item) => {
+      const label = prettifySubmissionFieldName(item.field)
+      const rawValue = String(item.value ?? '').trim()
+      const value = escapeHTML(rawValue).replaceAll('\n', '<br />')
+      const isLong =
+        rawValue.length > 120 ||
+        rawValue.includes('\n') ||
+        ['message', 'notes', 'comment', 'comments'].includes(String(item.field).toLowerCase())
+
+      return `
+        <div style="margin:0 0 14px;padding:0 0 14px;border-bottom:1px solid rgba(216,186,150,0.16);">
+          <div style="margin:0 0 6px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#cdb39a;">
+            ${escapeHTML(label)}
+          </div>
+          <div style="font-size:${isLong ? '15px' : '16px'};line-height:${isLong ? '1.75' : '1.6'};color:#f4e8da;">
+            ${value || '<span style="color:#cdb39a;">-</span>'}
+          </div>
+        </div>
+      `
+    })
+    .join('')
+
+  return `
+    <div style="font-family:Arial,sans-serif;">
+      ${rows}
+    </div>
+  `
+}
+
+const isDefaultEnglishFormSubject = (subject?: string) => {
+  if (!subject) return true
+
+  const normalized = subject.trim().toLowerCase()
+
+  return (
+    normalized === "you've received a new message." ||
+    normalized === 'you have received a new message.' ||
+    normalized === 'you received a new message.'
+  )
+}
+
+const stripHTML = (value: string) =>
+  value
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const shouldUseFallbackFormEmailHTML = (html?: string) => {
+  if (!html) return true
+
+  const normalized = stripHTML(html).toLowerCase()
+
+  return normalized === '' || normalized === 'undefined'
+}
 
 const sortCollectionsPlugin: Plugin = (incomingConfig) => {
   const sortedCollections = [...(incomingConfig.collections || [])].sort((a, b) => {
@@ -183,6 +285,26 @@ export const plugins: Plugin[] = [
     generateURL,
   }),
   formBuilderPlugin({
+    beforeEmail: (emails, { data, req }) => {
+      const submissionData = Array.isArray(data?.submissionData) ? data.submissionData : []
+      const locale = normalizeLocale(req?.locale)
+
+      return emails.map((email) => {
+        const fallbackHTML = buildSubmissionTableHTML(submissionData)
+        const contentHTML = shouldUseFallbackFormEmailHTML(email.html) ? fallbackHTML : email.html
+
+        return {
+          ...email,
+          html: buildFormSubmissionEmail({
+            bodyHTML: contentHTML,
+            locale,
+          }),
+          subject: isDefaultEnglishFormSubject(email.subject)
+            ? getFormSubmissionSubject(locale)
+            : email.subject,
+        }
+      })
+    },
     fields: {
       payment: false,
     },

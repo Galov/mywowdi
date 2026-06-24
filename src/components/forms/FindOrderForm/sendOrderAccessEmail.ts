@@ -3,6 +3,7 @@
 import configPromise from '@payload-config'
 import { defaultLocale, type ContentLocale } from '@/i18n/config'
 import { getLocalizedHref } from '@/i18n/routing'
+import { buildOrderAccessEmail } from '@/utilities/email/templates'
 import { getPayload } from 'payload'
 import { getServerSideURL } from '@/utilities/getURL'
 
@@ -46,21 +47,16 @@ export async function sendOrderAccessEmail({
       `/orders/${order.id}`,
     )}?email=${encodeURIComponent(email)}&accessToken=${order.accessToken}`
 
-    const emailBody = `
-        <h1>View Your Order</h1>
-        <p>Click the link below to view your order details:</p>
-        <p><a href="${orderURL}">View Order #${order.id}</a></p>
-        <p>Or copy and paste this URL into your browser:</p>
-        <p>${orderURL}</p>
-        <p>This link will give you access to view your order details.</p>
-      `
-
-    console.log('[sendOrderAccessEmail] Email body:', emailBody)
+    const orderAccessEmail = buildOrderAccessEmail({
+      locale,
+      orderID: String(order.id),
+      orderURL,
+    })
 
     await payload.sendEmail({
       to: email,
-      subject: `Access your order #${order.id}`,
-      html: emailBody,
+      subject: orderAccessEmail.subject,
+      html: orderAccessEmail.html,
     })
 
     return { success: true }

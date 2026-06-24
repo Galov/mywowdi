@@ -12,10 +12,14 @@ import { StockIndicator } from '@/components/product/StockIndicator'
 
 const productCopy = {
   bg: {
+    deliveryNotice:
+      'Доставката се заплаща отделно на куриера според тарифата на куриерската компания и не е включена в цената на продукта.',
     shippingLabel: ['Естествени материали. Тих допир.', 'Доставка в цяла Европа.'],
     startsFrom: 'Цена',
   },
   default: {
+    deliveryNotice:
+      'Delivery is paid separately to the courier according to the courier company tariff and is not included in the product price.',
     shippingLabel: ['Natural materials. Quiet tactility.', 'European delivery.'],
     startsFrom: 'Price',
   },
@@ -149,6 +153,13 @@ export function ProductDescription({
         <Suspense fallback={null}>
           <AddToCart locale={locale} product={product} tone={tone} />
         </Suspense>
+        <p
+          className={`text-sm leading-6 ${
+            isDark ? 'text-[#eadfce]/58' : 'text-primary/60'
+          }`}
+        >
+          {copy.deliveryNotice}
+        </p>
       </div>
     </div>
   )

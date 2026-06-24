@@ -5,6 +5,9 @@ import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
 import { publicAccess } from '@/access/publicAccess'
 import { adminOrSelf } from '@/access/adminOrSelf'
 import { checkRole } from '@/access/utilities'
+import { normalizeLocale } from '@/i18n/routing'
+import { buildResetPasswordEmail } from '@/utilities/email/templates'
+import { getServerSideURL } from '@/utilities/getURL'
 
 import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
 
@@ -28,6 +31,26 @@ export const Users: CollectionConfig = {
     useAsTitle: 'name',
   },
   auth: {
+    forgotPassword: {
+      generateEmailHTML: (args) => {
+        const locale = normalizeLocale(args?.req?.locale)
+        const token = args?.token || ''
+        const resetURL = `${getServerSideURL()}/${locale}/reset-password?token=${token}`
+
+        return buildResetPasswordEmail({
+          locale,
+          resetURL,
+        }).html
+      },
+      generateEmailSubject: (args) => {
+        const locale = normalizeLocale(args?.req?.locale)
+
+        return buildResetPasswordEmail({
+          locale,
+          resetURL: '#',
+        }).subject
+      },
+    },
     tokenExpiration: 1209600,
   },
   fields: [

@@ -14,7 +14,6 @@ export async function Footer({ locale }: { locale: ContentLocale }) {
   const footer: Footer = await getCachedGlobal('footer', locale, 1)()
   const menu = footer.navItems || []
   const currentYear = new Date().getFullYear()
-  const copyrightDate = 2023 + (currentYear > 2023 ? `-${currentYear}` : '')
   const skeleton = 'h-6 w-full animate-pulse rounded bg-white/8'
 
   const copyrightName = COMPANY_NAME || SITE_NAME || ''
@@ -57,7 +56,7 @@ export async function Footer({ locale }: { locale: ContentLocale }) {
       <div className="border-t border-white/10 py-6 text-sm text-[#d8c8b7]/66">
         <div className="container mx-auto flex w-full flex-col items-center gap-1 md:flex-row md:gap-0">
           <p>
-            &copy; {copyrightDate} {copyrightName}
+            &copy; {currentYear} {copyrightName}
             {copyrightName.length && !copyrightName.endsWith('.') ? '.' : ''}{' '}
             {isBulgarian ? 'Всички права запазени.' : 'All rights reserved.'}
           </p>

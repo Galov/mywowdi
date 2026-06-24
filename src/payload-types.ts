@@ -76,6 +76,7 @@ export interface Config {
     variantTypes: VariantType;
     variantOptions: VariantOption;
     variants: Variant;
+    inquiries: Inquiry;
     orders: Order;
     transactions: Transaction;
     carts: Cart;
@@ -109,6 +110,7 @@ export interface Config {
     variantTypes: VariantTypesSelect<false> | VariantTypesSelect<true>;
     variantOptions: VariantOptionsSelect<false> | VariantOptionsSelect<true>;
     variants: VariantsSelect<false> | VariantsSelect<true>;
+    inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
     transactions: TransactionsSelect<false> | TransactionsSelect<true>;
     carts: CartsSelect<false> | CartsSelect<true>;
@@ -988,6 +990,65 @@ export interface Variant {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Запитванията се създават от checkout-а, когато клиентът изпрати интерес към продуктите в количката си.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries".
+ */
+export interface Inquiry {
+  id: string;
+  reference?: string | null;
+  status?: ('new' | 'in-progress' | 'completed' | 'cancelled') | null;
+  locale?: ('bg' | 'en' | 'de' | 'fr' | 'it' | 'es') | null;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string | null;
+  items?:
+    | {
+        product: string | Product;
+        variant?: (string | null) | Variant;
+        productTitle: string;
+        variantLabel?: string | null;
+        quantity: number;
+        unitPrice: number;
+        lineTotal: number;
+        id?: string | null;
+      }[]
+    | null;
+  totalProductAmount: number;
+  currency: string;
+  billingAddress: {
+    title?: string | null;
+    firstName: string;
+    lastName: string;
+    company?: string | null;
+    phone?: string | null;
+    addressLine1: string;
+    addressLine2?: string | null;
+    city: string;
+    state?: string | null;
+    postalCode: string;
+    country: string;
+  };
+  shippingAddressSameAsBilling?: boolean | null;
+  shippingAddress?: {
+    title?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    company?: string | null;
+    phone?: string | null;
+    addressLine1?: string | null;
+    addressLine2?: string | null;
+    city?: string | null;
+    state?: string | null;
+    postalCode?: string | null;
+    country?: string | null;
+  };
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Поръчките се създават след успешно завършване на checkout процеса.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1258,6 +1319,10 @@ export interface PayloadLockedDocument {
         value: string | Variant;
       } | null)
     | ({
+        relationTo: 'inquiries';
+        value: string | Inquiry;
+      } | null)
+    | ({
         relationTo: 'orders';
         value: string | Order;
       } | null)
@@ -1483,6 +1548,66 @@ export interface VariantsSelect<T extends boolean = true> {
   createdAt?: T;
   deletedAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries_select".
+ */
+export interface InquiriesSelect<T extends boolean = true> {
+  reference?: T;
+  status?: T;
+  locale?: T;
+  customerName?: T;
+  customerEmail?: T;
+  customerPhone?: T;
+  items?:
+    | T
+    | {
+        product?: T;
+        variant?: T;
+        productTitle?: T;
+        variantLabel?: T;
+        quantity?: T;
+        unitPrice?: T;
+        lineTotal?: T;
+        id?: T;
+      };
+  totalProductAmount?: T;
+  currency?: T;
+  billingAddress?:
+    | T
+    | {
+        title?: T;
+        firstName?: T;
+        lastName?: T;
+        company?: T;
+        phone?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        city?: T;
+        state?: T;
+        postalCode?: T;
+        country?: T;
+      };
+  shippingAddressSameAsBilling?: T;
+  shippingAddress?:
+    | T
+    | {
+        title?: T;
+        firstName?: T;
+        lastName?: T;
+        company?: T;
+        phone?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        city?: T;
+        state?: T;
+        postalCode?: T;
+        country?: T;
+      };
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

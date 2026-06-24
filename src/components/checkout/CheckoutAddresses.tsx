@@ -1,6 +1,7 @@
 'use client'
 
 import { AddressItem } from '@/components/addresses/AddressItem'
+import { getCheckoutCopy } from '@/components/checkout/copy'
 import { CreateAddressModal } from '@/components/addresses/CreateAddressModal'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { Address } from '@/payload-types'
 import { useAddresses } from '@payloadcms/plugin-ecommerce/client/react'
+import { useCurrentLocale } from '@/i18n/useCurrentLocale'
 import { useState } from 'react'
 
 type Props = {
@@ -28,11 +30,13 @@ export const CheckoutAddresses: React.FC<Props> = ({
   description = 'Please select or add your shipping and billing addresses.',
 }) => {
   const { addresses } = useAddresses()
+  const locale = useCurrentLocale()
+  const copy = getCheckoutCopy(locale)
 
   if (!addresses || addresses.length === 0) {
     return (
       <div>
-        <p>No addresses found. Please add an address.</p>
+        <p>{copy.noAddressesFound}</p>
 
         <CreateAddressModal />
       </div>
@@ -52,6 +56,8 @@ export const CheckoutAddresses: React.FC<Props> = ({
 
 const AddressesModal: React.FC<Props> = ({ setAddress }) => {
   const [open, setOpen] = useState(false)
+  const locale = useCurrentLocale()
+  const copy = getCheckoutCopy(locale)
   const handleOpenChange = (state: boolean) => {
     setOpen(state)
   }
@@ -62,17 +68,17 @@ const AddressesModal: React.FC<Props> = ({ setAddress }) => {
   const { addresses } = useAddresses()
 
   if (!addresses || addresses.length === 0) {
-    return <p>No addresses found. Please add an address.</p>
+    return <p>{copy.noAddressesFound}</p>
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant={'outline'}>{'Select an address'}</Button>
+        <Button variant={'outline'}>{copy.shippingAddress}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{'Select an address'}</DialogTitle>
+          <DialogTitle>{copy.shippingAddress}</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-12">
@@ -89,7 +95,7 @@ const AddressesModal: React.FC<Props> = ({ setAddress }) => {
                         closeModal()
                       }}
                     >
-                      Select
+                      {copy.select}
                     </Button>
                   }
                 />

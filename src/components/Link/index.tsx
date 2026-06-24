@@ -42,6 +42,11 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   const currentLocale = useCurrentLocale()
   const resolvedLocale = locale || currentLocale
+  const fallbackLabel =
+    label ||
+    (typeof reference?.value === 'object' && 'title' in reference.value
+      ? reference.value.title || null
+      : null)
 
   const rawHref =
     type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
@@ -61,7 +66,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   if (appearance === 'inline') {
     return (
       <Link className={cn(className)} href={href} {...newTabProps}>
-        {label && label}
+        {fallbackLabel && fallbackLabel}
         {children && children}
       </Link>
     )
@@ -70,7 +75,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   return (
     <Button asChild className={className} size={size} variant={appearance}>
       <Link className={cn(className)} href={href} {...newTabProps}>
-        {label && label}
+        {fallbackLabel && fallbackLabel}
         {children && children}
       </Link>
     </Button>

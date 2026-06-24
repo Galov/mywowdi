@@ -1,4 +1,5 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
 import {
   BoldFeature,
@@ -17,6 +18,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from '@/collections/Categories'
+import { Inquiries } from '@/collections/Inquiries'
 import { Media } from '@/collections/Media'
 import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
@@ -28,6 +30,26 @@ import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const emailFromAddress = process.env.EMAIL_FROM_ADDRESS || 'no-reply@mywowdi.com'
+const emailFromName = process.env.EMAIL_FROM_NAME || 'MYWOWDI'
+const emailAdapter = process.env.RESEND_API_KEY
+  ? await nodemailerAdapter({
+      defaultFromAddress: emailFromAddress,
+      defaultFromName: emailFromName,
+      transportOptions: {
+        auth: {
+          pass: process.env.RESEND_API_KEY,
+          user: 'resend',
+        },
+        host: 'smtp.resend.com',
+        port: 465,
+        secure: true,
+      },
+    })
+  : await nodemailerAdapter({
+      defaultFromAddress: emailFromAddress,
+      defaultFromName: emailFromName,
+    })
 
 export default buildConfig({
   admin: {
@@ -43,10 +65,11 @@ export default buildConfig({
     dateFormat: 'dd MMM yyyy',
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media],
+  collections: [Users, Pages, Categories, Media, Inquiries],
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
+  email: emailAdapter,
   editor: lexicalEditor({
     features: () => {
       return [
@@ -82,7 +105,6 @@ export default buildConfig({
       ]
     },
   }),
-  //email: nodemailerAdapter(),
   endpoints: [],
   globals: [Header, Footer, SiteSettings],
   i18n: {

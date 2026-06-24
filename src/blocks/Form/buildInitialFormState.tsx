@@ -26,6 +26,12 @@ export const buildInitialFormState = (fields: FormFieldBlock[]) => {
         [field.name]: '',
       }
     }
+    if (field.blockType === 'textarea') {
+      return {
+        ...initialSchema,
+        [field.name]: '',
+      }
+    }
     if (field.blockType === 'select') {
       return {
         ...initialSchema,
@@ -38,7 +44,10 @@ export const buildInitialFormState = (fields: FormFieldBlock[]) => {
         [field.name]: '',
       }
     }
+    if (field.blockType === 'message') {
+      return initialSchema
+    }
 
-    return {}
+    return initialSchema
   }, {})
 }

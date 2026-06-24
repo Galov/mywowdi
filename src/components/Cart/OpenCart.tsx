@@ -1,13 +1,8 @@
 import type { ContentLocale } from '@/i18n/config'
 import { Button } from '@/components/ui/button'
-import clsx from 'clsx'
+import { getCartCopy } from '@/components/checkout/copy'
 import { ShoppingCart } from 'lucide-react'
 import React from 'react'
-
-const cartLabel = {
-  bg: 'Количка',
-  default: 'Cart',
-}
 
 export function OpenCartButton({
   className,
@@ -19,22 +14,23 @@ export function OpenCartButton({
   locale?: ContentLocale
   quantity?: number
 }) {
-  const label = locale === 'bg' ? cartLabel.bg : cartLabel.default
+  const label = getCartCopy(locale || 'en').cart
 
   return (
     <Button
       variant="nav"
       size="clear"
-      className="navLink relative items-end text-[#eadfce] hover:cursor-pointer hover:text-[#fbf5ec]"
+      className="navLink relative inline-flex h-6 w-6 items-center justify-center self-center p-0 pt-0 pb-0 text-[#eadfce] hover:cursor-pointer hover:text-[#fbf5ec]"
+      aria-label={label}
+      title={label}
       {...rest}
     >
-      <span>{label}</span>
+      <ShoppingCart className="size-5" />
 
       {quantity ? (
-        <>
-          <span>•</span>
-          <span>{quantity}</span>
-        </>
+        <span className="absolute -right-2 -top-2 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-[#d7b894] px-1 text-[10px] font-medium leading-none text-[#120c0a]">
+          {quantity}
+        </span>
       ) : null}
     </Button>
   )

@@ -1,5 +1,6 @@
 'use client'
 import { Button } from '@/components/ui/button'
+import { useCurrentLocale } from '@/i18n/useCurrentLocale'
 import React, { useState } from 'react'
 import {
   Dialog,
@@ -26,13 +27,52 @@ type Props = {
 export const CreateAddressModal: React.FC<Props> = ({
   addressID,
   initialData,
-  buttonText = 'Add a new address',
-  modalTitle = 'Add a new address',
+  buttonText,
+  modalTitle,
   callback,
   skipSubmission,
   disabled,
 }) => {
+  const locale = useCurrentLocale()
   const [open, setOpen] = useState(false)
+  const localizedButtonText =
+    buttonText ||
+    (
+      {
+        bg: 'Добави нов адрес',
+        de: 'Neue Adresse hinzufugen',
+        en: 'Add a new address',
+        es: 'Agregar una nueva direccion',
+        fr: 'Ajouter une nouvelle adresse',
+        it: 'Aggiungi un nuovo indirizzo',
+      } as const
+    )[locale]
+
+  const localizedModalTitle =
+    modalTitle ||
+    (
+      {
+        bg: 'Добавяне на нов адрес',
+        de: 'Neue Adresse hinzufugen',
+        en: 'Add a new address',
+        es: 'Agregar una nueva direccion',
+        fr: 'Ajouter une nouvelle adresse',
+        it: 'Aggiungi un nuovo indirizzo',
+      } as const
+    )[locale]
+
+  const localizedDescription =
+    (
+      {
+        bg: 'Този адрес ще бъде свързан с Вашия акаунт.',
+        de: 'Diese Adresse wird mit Ihrem Konto verknupft.',
+        en: 'This address will be connected to your account.',
+        es: 'Esta direccion se vinculara a su cuenta.',
+        fr: 'Cette adresse sera associee a votre compte.',
+        it: 'Questo indirizzo verra collegato al tuo account.',
+      } as const
+    )[locale]
+
   const handleOpenChange = (state: boolean) => {
     setOpen(state)
   }
@@ -52,12 +92,12 @@ export const CreateAddressModal: React.FC<Props> = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild disabled={disabled}>
-        <Button variant={'outline'}>{buttonText}</Button>
+        <Button variant={'outline'}>{localizedButtonText}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{modalTitle}</DialogTitle>
-          <DialogDescription>This address will be connected to your account.</DialogDescription>
+          <DialogTitle>{localizedModalTitle}</DialogTitle>
+          <DialogDescription>{localizedDescription}</DialogDescription>
         </DialogHeader>
 
         <AddressForm

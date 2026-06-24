@@ -1,19 +1,23 @@
 'use client'
 
 import type { CartItem } from '@/components/Cart'
+import { getCartCopy } from '@/components/checkout/copy'
+import { useCurrentLocale } from '@/i18n/useCurrentLocale'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import clsx from 'clsx'
 import { XIcon } from 'lucide-react'
 import React from 'react'
 
 export function DeleteItemButton({ item }: { item: CartItem }) {
+  const locale = useCurrentLocale()
+  const copy = getCartCopy(locale)
   const { isLoading, removeItem } = useCart()
   const itemId = item.id
 
   return (
     <form>
       <button
-        aria-label="Remove cart item"
+        aria-label={copy.removeCartItem}
         className={clsx(
           'ease hover:cursor-pointer flex h-[17px] w-[17px] items-center justify-center rounded-full bg-neutral-500 transition-all duration-200',
           {

@@ -1,6 +1,7 @@
 'use client'
 
 import { Message } from '@/components/Message'
+import { getCheckoutCopy } from '@/components/checkout/copy'
 import { Button } from '@/components/ui/button'
 import { getLocalizedHref } from '@/i18n/routing'
 import { useCurrentLocale } from '@/i18n/useCurrentLocale'
@@ -23,6 +24,7 @@ export const CheckoutForm: React.FC<Props> = ({
   setProcessingPayment,
 }) => {
   const locale = useCurrentLocale()
+  const copy = getCheckoutCopy(locale)
   const stripe = useStripe()
   const elements = useElements()
   const [error, setError] = React.useState<null | string>(null)
@@ -106,7 +108,7 @@ export const CheckoutForm: React.FC<Props> = ({
             } catch (err) {
               console.log({ err })
               const msg = err instanceof Error ? err.message : 'Something went wrong.'
-              setError(`Error while confirming order: ${msg}`)
+              setError(msg)
               setIsLoading(false)
             }
           }
@@ -116,7 +118,7 @@ export const CheckoutForm: React.FC<Props> = ({
           }
         } catch (err) {
           const msg = err instanceof Error ? err.message : 'Something went wrong.'
-          setError(`Error while submitting payment: ${msg}`)
+          setError(msg)
           setIsLoading(false)
           setProcessingPayment(false)
         }
@@ -147,7 +149,7 @@ export const CheckoutForm: React.FC<Props> = ({
       <PaymentElement />
       <div className="mt-8 flex gap-4">
         <Button disabled={!stripe || isLoading} type="submit" variant="default">
-          {isLoading ? 'Loading...' : 'Pay now'}
+          {isLoading ? copy.loading : copy.goToPayment}
         </Button>
       </div>
     </form>

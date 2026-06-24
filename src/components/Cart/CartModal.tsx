@@ -1,6 +1,7 @@
 'use client'
 
 import { Price } from '@/components/Price'
+import { getCartCopy } from '@/components/checkout/copy'
 import type { ContentLocale } from '@/i18n/config'
 import { getLocalizedHref } from '@/i18n/routing'
 import {
@@ -30,6 +31,7 @@ type VariantSelection = NonNullable<Variant['options']>[number]
 export function CartModal({ locale }: { locale: ContentLocale }) {
   const { cart } = useCart()
   const [isOpen, setIsOpen] = useState(false)
+  const copy = getCartCopy(locale)
 
   const pathname = usePathname()
 
@@ -51,15 +53,15 @@ export function CartModal({ locale }: { locale: ContentLocale }) {
 
       <SheetContent className="flex flex-col">
         <SheetHeader>
-          <SheetTitle>My Cart</SheetTitle>
+          <SheetTitle>{copy.cart}</SheetTitle>
 
-          <SheetDescription>Manage your cart here, add items to view the total.</SheetDescription>
+          <SheetDescription>{copy.cartDescription}</SheetDescription>
         </SheetHeader>
 
         {!cart || cart?.items?.length === 0 ? (
           <div className="text-center flex flex-col items-center gap-2">
             <ShoppingCart className="h-16" />
-            <p className="text-center text-2xl font-bold">Your cart is empty.</p>
+            <p className="text-center text-2xl font-bold">{copy.cartEmpty}</p>
           </div>
         ) : (
           <div className="grow flex px-4">
@@ -171,7 +173,7 @@ export function CartModal({ locale }: { locale: ContentLocale }) {
                 <div className="py-4 text-sm text-neutral-500">
                   {typeof cart?.subtotal === 'number' && (
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
-                      <p>Total</p>
+                      <p>{copy.total}</p>
                       <Price
                         amount={cart?.subtotal}
                         className="text-right text-base text-black"
@@ -181,7 +183,7 @@ export function CartModal({ locale }: { locale: ContentLocale }) {
 
                   <Button asChild>
                     <Link className="w-full" href={getLocalizedHref(locale, '/checkout')}>
-                      Proceed to Checkout
+                      {copy.proceedToCheckout}
                     </Link>
                   </Button>
                 </div>

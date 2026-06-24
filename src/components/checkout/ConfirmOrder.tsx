@@ -1,6 +1,7 @@
 'use client'
 
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { getCheckoutCopy } from '@/components/checkout/copy'
 import { getLocalizedHref } from '@/i18n/routing'
 import { useCurrentLocale } from '@/i18n/useCurrentLocale'
 import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
@@ -9,6 +10,7 @@ import { useEffect, useRef } from 'react'
 
 export const ConfirmOrder: React.FC = () => {
   const locale = useCurrentLocale()
+  const copy = getCheckoutCopy(locale)
   const { confirmOrder } = usePayments()
   const { cart } = useCart()
 
@@ -62,7 +64,7 @@ export const ConfirmOrder: React.FC = () => {
 
   return (
     <div className="text-center w-full flex flex-col items-center justify-start gap-4">
-      <h1 className="text-2xl">Confirming Order</h1>
+      <h1 className="text-2xl">{copy.confirmOrder}</h1>
 
       <LoadingSpinner className="w-12 h-6" />
     </div>
