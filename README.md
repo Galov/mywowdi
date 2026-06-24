@@ -2,7 +2,7 @@
 
 ## Media During Development
 
-This project currently uses a temporary filesystem-based media workflow.
+This project currently uses a filesystem-based media workflow without shared object storage.
 
 - The shared MongoDB database is common between local development and production.
 - Uploaded media files are **not** shared automatically between environments.
@@ -11,25 +11,36 @@ This project currently uses a temporary filesystem-based media workflow.
 
 ### Current source of truth
 
-The local `public/media` directory is the source of truth during development.
+The production server media directory is the source of truth for uploaded files.
 
 ### What happens on deploy
 
-The GitHub Actions deploy workflow now syncs `public/media/` to the server with `rsync --delete`.
+The GitHub Actions deploy workflow now deploys code and containers only. It does **not** sync `public/media/` to the server.
 
 This means:
 
-- files added locally will be uploaded to production on deploy
-- files deleted locally will also be deleted from production on deploy
-- files uploaded directly through `mywowdi.com/admin` will be overwritten on the next deploy if they do not also exist locally
+- files uploaded through `mywowdi.com/admin` stay on the server after deploys
+- deploys do not overwrite or delete production media
+- local `public/media` can fall out of sync with production over time
 
 ### Working rule
 
-During development, upload media locally and treat production media uploads as temporary only.
+During normal content work, upload media through the live admin panel.
+
+If you need the same files locally, pull them manually from the server before working on media-heavy changes.
+
+Run the command locally from your project directory. You do not need to SSH into the server first.
+
+Example:
+
+```bash
+cd /Users/ivogalov/Projects/MyWowdy.com
+rsync -az ivo@your-server:/srv/mywowdi/media/ public/media/
+```
 
 ## Future improvement
 
-The proper long-term solution is to move media storage to a shared object storage service such as Cloudflare R2, so both local and production environments use the same files.
+If the project eventually needs fully shared media between environments, the next step is to move uploads to shared object storage such as Cloudflare R2.
 
 # Payload Ecommerce Template
 
