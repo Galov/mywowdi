@@ -35,7 +35,7 @@ Example:
 
 ```bash
 cd /Users/ivogalov/Projects/MyWowdy.com
-rsync -az ivo@your-server:/srv/mywowdi/media/ public/media/
+rsync -az ivo@mywowdi:/srv/mywowdi/media/ public/media/
 ```
 
 ## Future improvement
